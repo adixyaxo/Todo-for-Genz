@@ -4,7 +4,9 @@ from src.routes.home import router as Home_Router
 from src.auth.router import router as Auth_Router
 from src.routes.about import router as About_Router
 from src.routes.dashboard import router as Dashboard_Router
-
+from src.user.router import router as User_Router
+from src.task.router import router as Task_Router
+from src.note.router import router as Note_Router
 app=FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -13,4 +15,6 @@ app.include_router(Home_Router)
 app.include_router(Auth_Router)
 app.include_router(About_Router)
 app.include_router(Dashboard_Router)
-
+app.include_router(User_Router)
+app.include_router(Note_Router)
+app.include_router(Task_Router)

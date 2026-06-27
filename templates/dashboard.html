@@ -344,22 +344,22 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="stat-card group">
               <div class="text-3xl font-bold text-white mb-1 group-hover:text-effortel-accent transition-colors"
-                id="stat-total">—</div>
+                id="stat-total">14</div>
               <div class="mono-tag text-gray-500">Total Tasks</div>
             </div>
             <div class="stat-card group">
               <div class="text-3xl font-bold text-white mb-1 group-hover:text-green-400 transition-colors"
-                id="stat-done">—</div>
+                id="stat-done">8</div>
               <div class="mono-tag text-gray-500">Completed</div>
             </div>
             <div class="stat-card group">
               <div class="text-3xl font-bold text-white mb-1 group-hover:text-yellow-400 transition-colors"
-                id="stat-pending">—</div>
+                id="stat-pending">6</div>
               <div class="mono-tag text-gray-500">In Progress</div>
             </div>
             <div class="stat-card group">
               <div class="text-3xl font-bold text-white mb-1 group-hover:text-blue-400 transition-colors"
-                id="stat-notes">—</div>
+                id="stat-notes">24</div>
               <div class="mono-tag text-gray-500">Notes Linked</div>
             </div>
           </div>
@@ -385,9 +385,45 @@
                 class="btn-effortel btn-pill bg-white text-black font-bold px-6 text-sm flex-shrink-0">Add Task</button>
             </div>
 
-            <div id="task-list">
-              <div class="text-gray-500 mono-tag py-8 text-center bg-black/20 rounded-xl border border-white/5">LOADING
-                SYSTEM...</div>
+            <div id="task-list" class="space-y-3">
+              <div
+                class="task-item bg-black/20 p-4 rounded-xl border border-white/5 hover:border-effortel-accent/30 transition-colors cursor-pointer group">
+                <div class="checkbox"></div>
+                <div class="flex-1">
+                  <div class="text-white font-medium mb-1 group-hover:text-effortel-accent transition-colors">Finalize
+                    user authentication flow</div>
+                  <div class="flex items-center gap-3">
+                    <span class="badge-priority badge-high">HIGH</span>
+                    <span class="text-xs text-gray-500 font-mono">Today, 5:00 PM</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="task-item bg-black/20 p-4 rounded-xl border border-white/5 hover:border-effortel-accent/30 transition-colors cursor-pointer group">
+                <div class="checkbox checked"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="black"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg></div>
+                <div class="flex-1 opacity-50 line-through">
+                  <div class="text-gray-400 font-medium mb-1">Draft API documentation</div>
+                  <div class="flex items-center gap-3">
+                    <span class="badge-priority badge-medium">MEDIUM</span>
+                    <span class="text-xs text-gray-500 font-mono">Completed</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="task-item bg-black/20 p-4 rounded-xl border border-white/5 hover:border-effortel-accent/30 transition-colors cursor-pointer group">
+                <div class="checkbox"></div>
+                <div class="flex-1">
+                  <div class="text-white font-medium mb-1 group-hover:text-effortel-accent transition-colors">Review
+                    pull request #124 from backend team</div>
+                  <div class="flex items-center gap-3">
+                    <span class="badge-priority badge-low">LOW</span>
+                    <span class="text-xs text-gray-500 font-mono">Tomorrow</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -403,9 +439,37 @@
               <a href="/notes" class="mono-tag text-gray-500 hover:text-effortel-accent transition-colors">EXPLORE →</a>
             </div>
             <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div
-                class="col-span-full text-gray-500 mono-tag py-8 text-center bg-black/20 rounded-xl border border-white/5">
-                FETCHING DOCUMENTS...</div>
+              <div class="note-card cursor-pointer group">
+                <div class="flex items-center justify-between mb-4">
+                  <span
+                    class="mono-tag text-[10px] text-effortel-accent bg-effortel-accent/10 px-2 py-1 rounded">DESIGN</span>
+                  <span class="text-xs text-gray-500 font-mono">Oct 24</span>
+                </div>
+                <h4 class="text-white font-bold mb-2 group-hover:text-effortel-accent transition-colors">Effortel UI Kit
+                  Architecture</h4>
+                <p class="text-sm text-gray-400 line-clamp-3">Structuring the bento grid system for the new dashboard.
+                  Need to ensure glassmorphism borders are consistently 1px with white/5 opacity.</p>
+              </div>
+              <div class="note-card cursor-pointer group">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="mono-tag text-[10px] text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded">MEETING</span>
+                  <span class="text-xs text-gray-500 font-mono">Oct 22</span>
+                </div>
+                <h4 class="text-white font-bold mb-2 group-hover:text-effortel-accent transition-colors">Sync with
+                  Backend Team</h4>
+                <p class="text-sm text-gray-400 line-clamp-3">Discussed the payload structure for the tasks API. The
+                  priority field should map to 0 (low), 1 (medium), 2 (high).</p>
+              </div>
+              <div class="note-card cursor-pointer group">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="mono-tag text-[10px] text-pink-400 bg-pink-400/10 px-2 py-1 rounded">IDEA</span>
+                  <span class="text-xs text-gray-500 font-mono">Oct 20</span>
+                </div>
+                <h4 class="text-white font-bold mb-2 group-hover:text-effortel-accent transition-colors">Interactive
+                  Hover States</h4>
+                <p class="text-sm text-gray-400 line-clamp-3">Maybe we can add subtle radial gradients on hover for the
+                  stat cards to give them more depth, similar to the Effortel hero section.</p>
+              </div>
             </div>
           </div>
 

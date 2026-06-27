@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +12,7 @@
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { 
+          fontFamily: {
             sans: ['Inter', 'sans-serif'],
             mono: ['Space Mono', 'monospace']
           },
@@ -28,185 +29,349 @@
     };
   </script>
   <style>
-    body { background: var(--effortel-dark-bg); color: #fff; }
-    .sidebar { background: var(--effortel-dark-bg); border-right: 1px solid rgba(255,255,255,0.05); }
-    .nav-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 14px; border-radius: 12px; font-size: 0.875rem; color: #888;
-      transition: all 0.2s; cursor: pointer; text-decoration: none; font-weight: 500;
-    }
-    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
-    .nav-item.active { color: var(--effortel-accent); background: rgba(46, 210, 229, 0.08); }
-    .nav-item.active svg { stroke: var(--effortel-accent); }
-    
-    .topbar { background: rgba(15,19,23,0.8); border-bottom: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(12px); }
-    
-    /* Two-pane layout */
-    .notes-pane {
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(0,0,0,0.2);
-      width: 280px;
-      flex-shrink: 0;
-    }
-    .editor-pane {
-      flex: 1;
+    body {
       background: var(--effortel-dark-bg);
-      position: relative;
+      color: #fff;
     }
-    
-    .note-list-item {
-      padding: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-      cursor: pointer;
+
+    .sidebar {
+      background: var(--effortel-dark-bg);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      color: #888;
       transition: all 0.2s;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
     }
-    .note-list-item:hover {
+
+    .nav-item:hover {
+      color: #fff;
       background: rgba(255, 255, 255, 0.03);
     }
-    .note-list-item.active {
-      background: rgba(46, 210, 229, 0.05);
-      border-left: 3px solid var(--effortel-accent);
-      padding-left: 13px;
+
+    .nav-item.active {
+      color: var(--effortel-accent);
+      background: rgba(46, 210, 229, 0.08);
     }
-    
-    .editor-title {
-      background: transparent; border: none; outline: none;
-      color: #fff; font-size: 2rem; font-weight: 700; width: 100%;
-      padding: 0; letter-spacing: -0.02em; font-family: inherit;
+
+    .nav-item.active svg {
+      stroke: var(--effortel-accent);
     }
-    .editor-title::placeholder { color: #444; }
-    
-    .editor-body {
-      background: transparent; border: none; outline: none;
-      color: #aaa; font-size: 1rem; width: 100%; padding: 0;
-      resize: none; min-height: 400px; font-family: inherit; line-height: 1.8;
+
+    .note-card {
+      background: var(--effortel-dark-surface);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
-    .editor-body::placeholder { color: #333; }
-    
-    .btn-danger {
-      color: #f87171; font-size: 0.75rem; padding: 6px 12px; border-radius: 999px;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      transition: all 0.2s; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em;
-      font-family: 'Space Mono', monospace;
+
+    .note-card:hover {
+      border-color: rgba(46, 210, 229, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.5); }
-    
-    .save-indicator {
-      font-size: 0.75rem; font-family: 'Space Mono', monospace; text-transform: uppercase;
-      color: #555; transition: color 0.3s;
+
+    .note-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, var(--effortel-accent) 0%, transparent 70%);
+      opacity: 0;
+      filter: blur(20px);
+      transition: opacity 0.3s;
+      pointer-events: none;
     }
-    .save-indicator.saved { color: #4ade80; }
-    
-    .search-input {
-      background: rgba(0,0,0,0.5); border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #fff; padding: 10px 14px; border-radius: 999px; font-size: 0.8rem;
-      outline: none; width: 100%; transition: all 0.2s;
+
+    .note-card:hover::after {
+      opacity: 0.15;
     }
-    .search-input:focus { border-color: var(--effortel-accent); }
-    .search-input::placeholder { color: #555; }
-    
+
+    .note-content-preview {
+      position: relative;
+    }
+
+    .note-content-preview::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to top, var(--effortel-dark-surface), transparent);
+    }
+
+    .topbar {
+      background: rgba(15, 19, 23, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+    }
+
     .avatar {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
       background: var(--effortel-accent);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 700; color: var(--effortel-dark-bg); flex-shrink: 0;
-    }
-    
-    .empty-pane {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      height: 100%; color: #555; gap: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--effortel-dark-bg);
+      flex-shrink: 0;
     }
   </style>
 </head>
+
 <body class="antialiased selection:bg-effortel-accent selection:text-black">
 
   <div class="flex h-screen overflow-hidden">
     <!-- SIDEBAR -->
-    <aside class="sidebar w-64 flex flex-col flex-shrink-0 hidden md:flex z-20">
+    <aside class="sidebar w-64 flex flex-col flex-shrink-0 hidden md:flex">
       <div class="p-6">
         <a href="/" class="flex items-center gap-2 font-bold text-white tracking-tight">
-          <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#2ED2E5"/><path d="M5 10h10M5 7h6M5 13h8" stroke="#0F1317" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg width="24" height="24" viewBox="0 0 20 20" fill="none">
+            <rect width="20" height="20" rx="4" fill="#2ED2E5" />
+            <path d="M5 10h10M5 7h6M5 13h8" stroke="#0F1317" stroke-width="2" stroke-linecap="round" />
+          </svg>
           TaskFlow
         </a>
       </div>
-      <nav class="flex-1 px-4 space-y-2">
+
+      <nav class="flex-1 px-4 space-y-2 overflow-y-auto">
         <a href="/dashboard" class="nav-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1" />
+            <rect width="7" height="5" x="14" y="3" rx="1" />
+            <rect width="7" height="9" x="14" y="12" rx="1" />
+            <rect width="7" height="5" x="3" y="16" rx="1" />
+          </svg>
           Overview
         </a>
         <a href="/tasks" class="nav-item">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
           Tasks
         </a>
         <a href="/notes" class="nav-item active">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+            <polyline points="14 2 14 8 20 8" />
+          </svg>
           Notes
         </a>
+
         <div class="pt-8">
           <p class="mono-tag text-gray-500 mb-3 px-3">[ SYSTEM ]</p>
           <a href="/profile" class="nav-item">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
             Profile
+          </a>
+          <a href="/settings" class="nav-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            Settings
           </a>
         </div>
       </nav>
+
       <div class="p-4 border-t border-white/5">
-        <button onclick="logout()" class="nav-item w-full text-left text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <button onclick="logout()"
+          class="nav-item w-full text-left text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
           Log out
         </button>
       </div>
     </aside>
 
-    <!-- MAIN -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <header class="topbar h-16 flex items-center justify-between px-8 flex-shrink-0 z-10">
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex flex-col overflow-hidden relative">
+      <!-- TOPBAR -->
+      <header class="topbar h-16 flex items-center justify-between px-8 flex-shrink-0 relative z-20">
         <div class="flex items-center gap-3">
-          <h1 class="text-sm font-semibold mono-tag tracking-widest text-gray-300">DOCUMENTATION</h1>
+          <div class="w-2 h-2 rounded-full bg-effortel-accent animate-pulse"></div>
+          <h1 class="text-sm font-semibold mono-tag tracking-widest text-gray-300">KNOWLEDGE BASE</h1>
         </div>
         <div class="flex items-center gap-4">
-          <span class="save-indicator" id="save-indicator"></span>
-          <button onclick="newNote()" class="btn-effortel btn-pill bg-effortel-accent text-effortel-dark-bg font-bold px-5 py-2 text-xs flex items-center gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            CREATE NOTE
-          </button>
-          <div class="avatar" id="user-avatar">U</div>
+          <div class="flex items-center gap-3 bg-white/5 pl-3 pr-1 py-1 rounded-full border border-white/5">
+            <span class="text-sm font-medium text-gray-300 hidden md:block" id="user-name">Aditya</span>
+            <div class="avatar" id="user-avatar">AD</div>
+          </div>
         </div>
       </header>
 
-      <div class="flex flex-1 overflow-hidden relative">
-        <!-- Glowing background for editor -->
-        <div class="absolute right-0 bottom-0 w-[500px] h-[500px] bg-effortel-accent/5 rounded-full blur-[150px] pointer-events-none"></div>
-
-        <!-- NOTES LIST PANE -->
-        <div class="notes-pane flex flex-col overflow-hidden z-10">
-          <div class="p-4 border-b border-white/5">
-            <input type="search" id="search-input" placeholder="Search knowledge base..." class="search-input" oninput="searchNotes()" />
-          </div>
-          <div id="note-list" class="flex-1 overflow-y-auto">
-            <div class="text-center py-10 mono-tag text-gray-600">FETCHING INDEX...</div>
-          </div>
-        </div>
-
-        <!-- EDITOR PANE -->
-        <div class="editor-pane flex flex-col overflow-hidden z-10">
-          <div id="editor-empty" class="empty-pane flex-1">
-            <div class="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-            </div>
-            <p class="mono-tag text-xs tracking-widest text-gray-500">SELECT A DOCUMENT TO PREVIEW</p>
-          </div>
-          <div id="editor-area" class="flex-1 flex flex-col p-10 overflow-y-auto hidden max-w-4xl mx-auto w-full">
-            <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-              <div class="mono-tag text-gray-500" id="note-meta">—</div>
-              <button onclick="deleteCurrentNote()" class="btn-danger">DELETE</button>
-            </div>
-            <input type="text" id="note-title-input" class="editor-title mb-6" placeholder="Untitled Document" />
-            <textarea id="note-body-input" class="editor-body flex-1" placeholder="Begin typing..."></textarea>
-          </div>
-        </div>
+      <!-- BACKGROUND GLOW -->
+      <div
+        class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-effortel-accent/5 rounded-full blur-[150px] pointer-events-none z-0">
       </div>
+
+      <!-- SCROLL AREA -->
+      <main class="flex-1 overflow-y-auto p-8 relative z-10">
+        <div class="max-w-6xl mx-auto space-y-10">
+
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-6">
+            <div>
+              <h2 class="text-4xl font-bold text-white mb-2">Notes & Docs</h2>
+              <p class="text-gray-400">Your decentralized thought repository.</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+              <div class="relative">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input type="text" placeholder="Search notes..."
+                  class="bg-black/30 border border-white/10 rounded-full py-2 pl-9 pr-4 text-sm text-white focus:outline-none focus:border-effortel-accent transition-colors w-64" />
+              </div>
+
+              <button
+                class="btn-effortel btn-pill bg-effortel-accent text-effortel-dark-bg font-bold px-6 py-2.5 text-sm flex items-center gap-2 max-w-fit shadow-[0_0_20px_rgba(46,210,229,0.3)] hover:shadow-[0_0_30px_rgba(46,210,229,0.5)] transition-all">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Write
+              </button>
+            </div>
+          </div>
+
+          <!-- NOTES GRID -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            <!-- Note Card 1 -->
+            <div class="note-card cursor-pointer group">
+              <div class="flex items-center justify-between mb-6">
+                <span
+                  class="mono-tag text-[10px] text-effortel-accent bg-effortel-accent/10 px-2 py-1 rounded">DESIGN</span>
+                <span class="text-xs text-gray-500 font-mono">Oct 24</span>
+              </div>
+              <h4 class="text-xl text-white font-bold mb-3 group-hover:text-effortel-accent transition-colors">Effortel
+                UI Kit Architecture</h4>
+              <div class="note-content-preview flex-1">
+                <p class="text-sm text-gray-400 leading-relaxed">
+                  Structuring the bento grid system for the new dashboard. Need to ensure glassmorphism borders are
+                  consistently 1px with white/5 opacity.
+                  The cyan accent (#2ED2E5) should only be used for hover states and active indicators to maintain the
+                  dark minimalist vibe.
+                </p>
+              </div>
+            </div>
+
+            <!-- Note Card 2 -->
+            <div class="note-card cursor-pointer group">
+              <div class="flex items-center justify-between mb-6">
+                <span class="mono-tag text-[10px] text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded">MEETING</span>
+                <span class="text-xs text-gray-500 font-mono">Oct 22</span>
+              </div>
+              <h4 class="text-xl text-white font-bold mb-3 group-hover:text-effortel-accent transition-colors">Sync with
+                Backend Team</h4>
+              <div class="note-content-preview flex-1">
+                <p class="text-sm text-gray-400 leading-relaxed font-mono">
+                  > Discussed payload structure<br>
+                  > priority field maps: 0(low) 1(med) 2(high)<br>
+                  > Add rate limiting to /tasks endpoint<br>
+                  <br>
+                  Next steps: I need to write the tests for the new API routes.
+                </p>
+              </div>
+            </div>
+
+            <!-- Note Card 3 -->
+            <div class="note-card cursor-pointer group">
+              <div class="flex items-center justify-between mb-6">
+                <span class="mono-tag text-[10px] text-pink-400 bg-pink-400/10 px-2 py-1 rounded">IDEA</span>
+                <span class="text-xs text-gray-500 font-mono">Oct 20</span>
+              </div>
+              <h4 class="text-xl text-white font-bold mb-3 group-hover:text-effortel-accent transition-colors">
+                Interactive Hover States</h4>
+              <div class="note-content-preview flex-1">
+                <p class="text-sm text-gray-400 leading-relaxed">
+                  Maybe we can add subtle radial gradients on hover for the stat cards to give them more depth, similar
+                  to the Effortel hero section.
+                  Using CSS variables for mouse X/Y could make the glow follow the cursor dynamically.
+                </p>
+              </div>
+            </div>
+
+            <!-- Note Card 4 -->
+            <div class="note-card cursor-pointer group">
+              <div class="flex items-center justify-between mb-6">
+                <span class="mono-tag text-[10px] text-green-400 bg-green-400/10 px-2 py-1 rounded">SNIPPET</span>
+                <span class="text-xs text-gray-500 font-mono">Oct 18</span>
+              </div>
+              <h4 class="text-xl text-white font-bold mb-3 group-hover:text-effortel-accent transition-colors">Auth
+                Middleware Fix</h4>
+              <div class="note-content-preview flex-1">
+                <div class="bg-black/50 p-3 rounded-lg border border-white/5 overflow-hidden">
+                  <pre class="text-xs text-gray-400 font-mono"><code>const auth = (req, res, next) => {
+  const token = req.header('x-auth');
+  if(!token) return res.status(401);
+  // ...
+}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <!-- Note Card 5 -->
+            <div class="note-card cursor-pointer group">
+              <div class="flex items-center justify-between mb-6">
+                <span class="mono-tag text-[10px] text-purple-400 bg-purple-400/10 px-2 py-1 rounded">PLANNING</span>
+                <span class="text-xs text-gray-500 font-mono">Oct 15</span>
+              </div>
+              <h4 class="text-xl text-white font-bold mb-3 group-hover:text-effortel-accent transition-colors">Q4 OKRs
+              </h4>
+              <div class="note-content-preview flex-1">
+                <p class="text-sm text-gray-400 leading-relaxed">
+                  1. Launch V2 of TaskFlow with new aesthetic.<br>
+                  2. Hit 10k monthly active users.<br>
+                  3. Reduce latency on notes query by 50%.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </main>
     </div>
   </div>
 </body>
+
 </html>
