@@ -4,120 +4,166 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile — TaskFlow</title>
+  <script src="/static/js/script.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
   <script>
-    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] } } } };
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace']
+          },
+          colors: {
+            'effortel-dark-bg': '#0F1317',
+            'effortel-dark-surface': '#1B2026',
+            'effortel-light-bg': '#D1DCE2',
+            'effortel-light-surface': '#A9BAC4',
+            'effortel-accent': '#2ED2E5',
+            'effortel-accent-hover': '#1BB8C8',
+          },
+        },
+      },
+    };
   </script>
   <style>
-    body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
-    .sidebar { background: #080808; border-right: 1px solid rgba(255,255,255,0.06); }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; color: #777; transition: color 0.15s, background 0.15s; text-decoration: none; }
-    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.04); }
-    .nav-item.active { color: #fff; background: rgba(255,255,255,0.06); }
-    .topbar { background: rgba(0,0,0,0.85); border-bottom: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(12px); }
-    .section-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #444; padding: 8px 12px; }
-    .input-field { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 0.875rem; outline: none; transition: border-color 0.15s; width: 100%; }
-    .input-field:focus { border-color: #0070f3; }
+    body { background: var(--effortel-dark-bg); color: #fff; }
+    .sidebar { background: var(--effortel-dark-bg); border-right: 1px solid rgba(255,255,255,0.05); }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: 12px; font-size: 0.875rem; color: #888;
+      transition: all 0.2s; cursor: pointer; text-decoration: none; font-weight: 500;
+    }
+    .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
+    .nav-item.active { color: var(--effortel-accent); background: rgba(46, 210, 229, 0.08); }
+    .nav-item.active svg { stroke: var(--effortel-accent); }
+    
+    .topbar { background: rgba(15,19,23,0.8); border-bottom: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(12px); }
+    
+    .input-field {
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);
+      color: #fff; padding: 14px 16px; border-radius: 12px; font-size: 0.875rem;
+      outline: none; transition: all 0.2s; width: 100%;
+    }
+    .input-field:focus { border-color: var(--effortel-accent); background: rgba(46,210,229,0.05); }
     .input-field::placeholder { color: #444; }
     .input-field:disabled { opacity: 0.5; cursor: not-allowed; }
-    .section-card { background: #0a0a0a; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
-    .section-card-header { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .section-card-body { padding: 20px; }
-    .btn-primary { background: #fff; color: #000; font-weight: 500; padding: 9px 20px; border-radius: 8px; font-size: 0.875rem; transition: background 0.15s; cursor: pointer; }
-    .btn-primary:hover { background: #e8e8e8; }
-    .btn-danger { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); font-weight: 500; padding: 9px 20px; border-radius: 8px; font-size: 0.875rem; transition: background 0.15s; cursor: pointer; }
-    .btn-danger:hover { background: rgba(239,68,68,0.2); }
-    .avatar-xl { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, #0070f3, #00c6ff); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 600; color: #fff; }
-    .avatar-sm { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #0070f3, #00c6ff); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #fff; }
-    .success-msg { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; padding: 10px 14px; border-radius: 8px; font-size: 0.8rem; }
-    .error-msg { background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); color: #f87171; padding: 10px 14px; border-radius: 8px; font-size: 0.8rem; }
-    .divider { border-color: rgba(255,255,255,0.06); }
+    
+    .section-card {
+      background: var(--effortel-dark-surface); border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 24px; overflow: hidden; transition: border-color 0.3s;
+    }
+    .section-card-header { padding: 24px 32px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .section-card-body { padding: 24px 32px 32px; }
+    
+    .avatar-xl {
+      width: 80px; height: 80px; border-radius: 24px;
+      background: var(--effortel-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700; color: var(--effortel-dark-bg);
+      border: 4px solid rgba(46, 210, 229, 0.2);
+    }
+    .avatar-sm {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--effortel-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: var(--effortel-dark-bg); flex-shrink: 0;
+    }
+    
+    .success-msg { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; padding: 12px 16px; border-radius: 12px; font-size: 0.8rem; font-family: 'Space Mono', monospace; text-transform: uppercase; }
+    .error-msg { background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); color: #f87171; padding: 12px 16px; border-radius: 12px; font-size: 0.8rem; font-family: 'Space Mono', monospace; text-transform: uppercase; }
   </style>
 </head>
-<body class="antialiased">
+<body class="antialiased selection:bg-effortel-accent selection:text-black">
 
-  <div class="flex h-screen overflow-hidden">
+  <div class="flex h-screen overflow-hidden relative">
+    <!-- Glowing background accent -->
+    <div class="absolute left-[-200px] top-[20%] w-[500px] h-[500px] bg-effortel-accent/5 rounded-full blur-[150px] pointer-events-none"></div>
+
     <!-- SIDEBAR -->
-    <aside class="sidebar w-56 flex flex-col flex-shrink-0 hidden md:flex">
-      <div class="p-4 border-b border-white/5">
-        <a href="/" class="flex items-center gap-2 font-semibold text-white text-sm">
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#0070f3"/><path d="M5 10h10M5 7h6M5 13h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <aside class="sidebar w-64 flex flex-col flex-shrink-0 hidden md:flex z-20 relative">
+      <div class="p-6">
+        <a href="/" class="flex items-center gap-2 font-bold text-white tracking-tight">
+          <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#2ED2E5"/><path d="M5 10h10M5 7h6M5 13h8" stroke="#0F1317" stroke-width="2" stroke-linecap="round"/></svg>
           TaskFlow
         </a>
       </div>
-      <nav class="flex-1 p-3 space-y-1">
+      <nav class="flex-1 px-4 space-y-2">
         <a href="/dashboard" class="nav-item">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor" opacity=".5"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity=".5"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor" opacity=".5"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
           Overview
         </a>
         <a href="/tasks" class="nav-item">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
           Tasks
         </a>
         <a href="/notes" class="nav-item">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
           Notes
         </a>
-        <div class="pt-4">
-          <p class="section-label">Account</p>
+        <div class="pt-8">
+          <p class="mono-tag text-gray-500 mb-3 px-3">[ SYSTEM ]</p>
           <a href="/profile" class="nav-item active">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 13c0-2.2 2.7-4 6-4s6 1.8 6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Profile
           </a>
         </div>
       </nav>
-      <div class="p-3 border-t border-white/5">
-        <button onclick="logout()" class="nav-item w-full text-left text-red-400 hover:text-red-300 hover:bg-red-950/30">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M10 11l3-3-3-3M13 8H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <div class="p-4 border-t border-white/5">
+        <button onclick="logout()" class="nav-item w-full text-left text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Log out
         </button>
       </div>
     </aside>
 
     <!-- MAIN -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-      <header class="topbar h-14 flex items-center justify-between px-6 flex-shrink-0">
-        <h1 class="text-sm font-semibold text-white">Profile</h1>
+    <div class="flex-1 flex flex-col overflow-hidden relative z-10">
+      <header class="topbar h-16 flex items-center justify-between px-8 flex-shrink-0">
+        <h1 class="text-sm font-semibold mono-tag tracking-widest text-gray-300">USER PROFILE</h1>
         <div class="avatar-sm" id="user-avatar">U</div>
       </header>
 
-      <main class="flex-1 overflow-y-auto p-6">
-        <div class="max-w-2xl mx-auto space-y-6">
+      <main class="flex-1 overflow-y-auto p-8">
+        <div class="max-w-3xl mx-auto space-y-10">
 
           <!-- PROFILE INFO -->
           <div class="section-card">
             <div class="section-card-header flex items-center justify-between">
-              <h2 class="text-sm font-semibold text-white">Profile information</h2>
+              <h2 class="text-xl font-bold text-white tracking-tight">Identity Settings</h2>
             </div>
             <div class="section-card-body">
-              <div class="flex items-center gap-5 mb-6">
+              <div class="flex items-center gap-6 mb-10 pb-8 border-b border-white/5">
                 <div class="avatar-xl" id="big-avatar">U</div>
                 <div>
-                  <p class="text-sm font-medium text-white" id="display-name">Loading...</p>
-                  <p class="text-xs text-gray-500 mt-1" id="display-email">—</p>
-                  <p class="text-xs text-gray-700 mt-1" id="display-joined">—</p>
+                  <p class="text-2xl font-bold text-white mb-2" id="display-name">Loading...</p>
+                  <div class="flex items-center gap-3">
+                    <p class="mono-tag text-gray-500 bg-white/5 px-2 py-1 rounded-md" id="display-email">—</p>
+                    <p class="mono-tag text-gray-600" id="display-joined">—</p>
+                  </div>
                 </div>
               </div>
-              <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
+              
+              <div class="space-y-6">
+                <div class="grid grid-cols-2 gap-5">
                   <div>
-                    <label class="block text-xs text-gray-500 mb-2 uppercase tracking-wider">First name</label>
-                    <input type="text" id="first-name" class="input-field" placeholder="First name" />
+                    <label class="block text-[10px] text-gray-400 mb-2 mono-tag">FIRST NAME</label>
+                    <input type="text" id="first-name" class="input-field" placeholder="Ada" />
                   </div>
                   <div>
-                    <label class="block text-xs text-gray-500 mb-2 uppercase tracking-wider">Last name</label>
-                    <input type="text" id="last-name" class="input-field" placeholder="Last name" />
+                    <label class="block text-[10px] text-gray-400 mb-2 mono-tag">LAST NAME</label>
+                    <input type="text" id="last-name" class="input-field" placeholder="Lovelace" />
                   </div>
                 </div>
                 <div>
-                  <label class="block text-xs text-gray-500 mb-2 uppercase tracking-wider">Email</label>
-                  <input type="email" id="email" class="input-field" placeholder="Email" disabled />
-                  <p class="text-xs text-gray-700 mt-1.5">Email cannot be changed.</p>
+                  <label class="block text-[10px] text-gray-400 mb-2 mono-tag">EMAIL ADDRESS</label>
+                  <input type="email" id="email" class="input-field" placeholder="you@domain.com" disabled />
+                  <p class="text-xs text-gray-600 mt-2 mono-tag">[ EMAIL CANNOT BE CHANGED ]</p>
                 </div>
                 <div id="profile-msg" class="hidden"></div>
-                <div class="flex justify-end">
-                  <button onclick="saveProfile()" class="btn-primary">Save changes</button>
+                <div class="flex justify-end pt-4">
+                  <button onclick="saveProfile()" class="btn-effortel btn-pill bg-white text-black font-bold px-8 py-3 text-sm">SAVE CHANGES</button>
                 </div>
               </div>
             </div>
@@ -126,40 +172,45 @@
           <!-- CHANGE PASSWORD -->
           <div class="section-card">
             <div class="section-card-header">
-              <h2 class="text-sm font-semibold text-white">Change password</h2>
+              <h2 class="text-xl font-bold text-white tracking-tight">Security</h2>
             </div>
-            <div class="section-card-body space-y-4">
+            <div class="section-card-body space-y-6">
               <div>
-                <label class="block text-xs text-gray-500 mb-2 uppercase tracking-wider">Current password</label>
+                <label class="block text-[10px] text-gray-400 mb-2 mono-tag">CURRENT PASSWORD</label>
                 <input type="password" id="current-pw" class="input-field" placeholder="••••••••" />
               </div>
-              <div>
-                <label class="block text-xs text-gray-500 mb-2 uppercase tracking-wider">New password</label>
-                <input type="password" id="new-pw" class="input-field" placeholder="Min. 8 characters" />
-              </div>
-              <div>
-                <label class="block text-xs text-gray-500 mb-2 uppercase tracking-wider">Confirm new password</label>
-                <input type="password" id="confirm-pw" class="input-field" placeholder="••••••••" />
+              <div class="grid grid-cols-2 gap-5">
+                <div>
+                  <label class="block text-[10px] text-gray-400 mb-2 mono-tag">NEW PASSWORD</label>
+                  <input type="password" id="new-pw" class="input-field" placeholder="Min. 8 characters" />
+                </div>
+                <div>
+                  <label class="block text-[10px] text-gray-400 mb-2 mono-tag">CONFIRM NEW PASSWORD</label>
+                  <input type="password" id="confirm-pw" class="input-field" placeholder="••••••••" />
+                </div>
               </div>
               <div id="pw-msg" class="hidden"></div>
-              <div class="flex justify-end">
-                <button onclick="changePassword()" class="btn-primary">Update password</button>
+              <div class="flex justify-end pt-4">
+                <button onclick="changePassword()" class="btn-effortel btn-pill bg-white text-black font-bold px-8 py-3 text-sm">UPDATE PASSWORD</button>
               </div>
             </div>
           </div>
 
           <!-- DANGER ZONE -->
-          <div class="section-card" style="border-color: rgba(239,68,68,0.15)">
-            <div class="section-card-header" style="border-bottom-color: rgba(239,68,68,0.1)">
-              <h2 class="text-sm font-semibold text-red-400">Danger zone</h2>
+          <div class="section-card bg-red-950/10 border-red-500/20">
+            <div class="section-card-header border-red-500/10">
+              <h2 class="text-xl font-bold text-red-400 tracking-tight flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Danger Zone
+              </h2>
             </div>
             <div class="section-card-body">
-              <div class="flex items-start justify-between gap-4">
+              <div class="flex items-center justify-between gap-6">
                 <div>
-                  <p class="text-sm text-white mb-1">Delete account</p>
-                  <p class="text-xs text-gray-500">This permanently deletes your account, tasks, and notes. This action cannot be undone.</p>
+                  <p class="text-base font-bold text-white mb-2">Delete Workspace</p>
+                  <p class="text-sm text-gray-500 leading-relaxed max-w-md">This permanently destroys your account and obliterates all associated tasks and knowledge base documents. This cannot be undone.</p>
                 </div>
-                <button onclick="deleteAccount()" class="btn-danger flex-shrink-0">Delete account</button>
+                <button onclick="deleteAccount()" class="btn-effortel btn-pill bg-red-500/10 text-red-400 font-bold px-8 py-3 text-sm border border-red-500/20 hover:bg-red-500 hover:text-black flex-shrink-0">DESTROY ACCOUNT</button>
               </div>
             </div>
           </div>

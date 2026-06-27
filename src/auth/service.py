@@ -21,11 +21,9 @@ def handle_login(user:USER_LOGIN,request:Request):
     )
   else:
     return templates.TemplateResponse(
-      name="message.html",
+      name="dashboard.html",
       request=request,
-      context={"code":"001",
-              "title":"Sign In Successfull",
-              "message":"The signup process for a major success"}
+      context={}
   )
 
 

@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --effortel-dark-bg: #0F1317;
+  --effortel-dark-surface: #1B2026;
+  --effortel-light-bg: #D1DCE2;
+  --effortel-light-surface: #A9BAC4;
+  --effortel-accent: #2ED2E5;
+  --effortel-accent-hover: #1BB8C8;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--effortel-dark-bg);
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono-tag {
+  font-family: 'Space Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+/* Base button animations */
+.btn-effortel {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.btn-effortel:hover {
+  transform: scale(1.02);
+}
+.btn-effortel:active {
+  transform: scale(0.98);
+}
+
+.btn-pill {
+  border-radius: 9999px;
+}
+
+/* Smooth gradients for hero */
+.hero-glow-blob {
+  position: absolute;
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.glass-panel {
+  background: rgba(27, 32, 38, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bento-card {
+  background: var(--effortel-dark-surface);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  border-color: rgba(46, 210, 229, 0.3);
+}
+
+/* Floating Nav */
+.floating-nav {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 768px) {
+  .floating-nav {
+    width: calc(100% - 32px);
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .floating-nav .nav-links {
+    display: none;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.anim-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--effortel-dark-bg); 
+}
+::-webkit-scrollbar-thumb {
+  background: #334155; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569; 
+}

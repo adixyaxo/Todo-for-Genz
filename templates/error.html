@@ -1,88 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Error</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-  <script src="../static/js/script.js"></script>
-<style>
-body{
-    background:#000;
-    color:#fff;
-}
-
-.grid-bg{
-    background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-    background-size:48px 48px;
-}
-
-.fade{
-    animation:fade .7s ease-out;
-}
-
-@keyframes fade{
-    from{
-        opacity:0;
-        transform:translateY(12px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error — TaskFlow</title>
+  <script src="/static/js/script.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace']
+          },
+          colors: {
+            'effortel-dark-bg': '#0F1317',
+            'effortel-dark-surface': '#1B2026',
+            'effortel-light-bg': '#D1DCE2',
+            'effortel-light-surface': '#A9BAC4',
+            'effortel-accent': '#2ED2E5',
+            'effortel-accent-hover': '#1BB8C8',
+          },
+        },
+      },
+    };
+  </script>
 </head>
-
-<body class="grid-bg min-h-screen flex items-center justify-center">
+<body class="antialiased min-h-screen flex items-center justify-center bg-effortel-dark-bg text-white selection:bg-effortel-accent selection:text-black">
 
 <!-- ambient glow -->
-<div class="absolute w-[600px] h-[600px] bg-white/5 rounded-full blur-[160px]
-            top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+<div class="fixed w-[600px] h-[600px] bg-red-500/10 rounded-full blur-[150px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
 <!-- Error Card -->
-<div class="relative max-w-md w-full px-8 text-center fade">
+<div class="relative z-10 max-w-md w-full px-8 text-center anim-float" style="animation-duration: 7s;">
 
     <!-- Code -->
-    <div class="text-7xl font-light tracking-tight">
+    <div class="text-[120px] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/10 leading-none mb-6">
         {{code}}
     </div>
 
     <!-- Message -->
-    <h1 class="mt-6 text-xl font-light">
+    <h1 class="text-3xl font-bold tracking-tight mb-2">
         {{title}}
     </h1>
 
-    <p class="mt-4 text-sm text-neutral-500 leading-relaxed">
+    <div class="mono-tag text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-1 rounded-full inline-block mb-6">
+        [ SYSTEM EXCEPTION ]
+    </div>
+
+    <p class="text-base text-gray-400 leading-relaxed mb-10">
         {{message}}
     </p>
 
     <!-- Actions -->
-    <div class="mt-10 flex flex-col gap-3">
-
-        <a href="/"
-           class="w-full py-3 rounded-xl bg-white text-black font-medium
-                  hover:opacity-90 transition active:scale-[0.99]">
-            Go home
+    <div class="flex flex-col gap-4">
+        <a href="/" class="btn-effortel btn-pill bg-white text-black font-bold px-8 py-4 text-sm w-full transition-colors hover:bg-gray-200">
+            RETURN TO HOMEPAGE
         </a>
-
-        <a href="/docs"
-           class="w-full py-3 rounded-xl border border-white/10 text-white
-                  hover:bg-white/5 transition">
-            View API docs
+        <a href="/docs" class="btn-effortel btn-pill glass-panel text-white font-bold px-8 py-4 text-sm w-full border border-white/10 hover:bg-white/10 transition-colors">
+            VIEW API DOCUMENTATION
         </a>
-
     </div>
 
     <!-- Footer hint -->
-    <p class="text-xs text-neutral-600 mt-10">
-        If this persists, check your endpoint or FastAPI route config.
+    <p class="mono-tag text-[10px] text-gray-600 mt-12">
+        IF THIS PERSISTS, CHECK YOUR ENDPOINT OR FASTAPI ROUTE CONFIG.
     </p>
-
 </div>
 
 </body>

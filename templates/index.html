@@ -2,20 +2,26 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-    <script src="../static/js/script.js"></script>
+  <script src="/static/js/script.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TaskFlow — Minimal Task & Notes Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Space Mono', 'monospace']
+          },
           colors: {
-            accent: '#0070f3',
-            'accent-hover': '#0060df',
+            'effortel-dark-bg': '#0F1317',
+            'effortel-dark-surface': '#1B2026',
+            'effortel-light-bg': '#D1DCE2',
+            'effortel-light-surface': '#A9BAC4',
+            'effortel-accent': '#2ED2E5',
+            'effortel-accent-hover': '#1BB8C8',
           },
           animation: {
             'fade-up': 'fadeUp 0.6s ease forwards',
@@ -35,240 +41,237 @@
       },
     };
   </script>
-  <style>
-    body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
-    .hero-glow {
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(0,112,243,0.15) 0%, transparent 70%);
-      top: -100px; left: 50%; transform: translateX(-50%);
-      pointer-events: none;
-    }
-    .border-subtle { border-color: rgba(255,255,255,0.08); }
-    .card-hover { transition: border-color 0.2s ease, background 0.2s ease; }
-    .card-hover:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); }
-    .btn-primary {
-      background: #fff; color: #000; font-weight: 500;
-      transition: background 0.15s, opacity 0.15s;
-    }
-    .btn-primary:hover { background: #e8e8e8; }
-    .btn-secondary {
-      border: 1px solid rgba(255,255,255,0.15); color: #fff;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.04); }
-    .nav-link { color: #888; transition: color 0.15s; }
-    .nav-link:hover { color: #fff; }
-    .feature-num { color: rgba(255,255,255,0.15); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; }
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(0,112,243,0.1); border: 1px solid rgba(0,112,243,0.25);
-      color: #60a5fa; font-size: 0.75rem; padding: 4px 12px; border-radius: 999px;
-    }
-    .badge-dot { width: 6px; height: 6px; background: #0070f3; border-radius: 50%; animation: glowPulse 2s ease-in-out infinite; }
-    .divider { border-color: rgba(255,255,255,0.06); }
-    @keyframes glowPulse { 0%,100%{opacity:.4}50%{opacity:1} }
-    .anim-delay-1 { animation-delay: 0.1s; opacity: 0; }
-    .anim-delay-2 { animation-delay: 0.2s; opacity: 0; }
-    .anim-delay-3 { animation-delay: 0.3s; opacity: 0; }
-    .anim-delay-4 { animation-delay: 0.4s; opacity: 0; }
-  </style>
 </head>
-<body class="antialiased">
+<body class="antialiased text-white bg-effortel-dark-bg selection:bg-effortel-accent selection:text-black">
 
-  <!-- NAV -->
-  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-subtle backdrop-blur-md" style="background:rgba(0,0,0,0.7)">
-    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
-      <a href="/" class="flex items-center gap-2 font-semibold tracking-tight text-white">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="20" height="20" rx="4" fill="#0070f3"/>
-          <path d="M5 10h10M5 7h6M5 13h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        TaskFlow
-      </a>
-      <div class="hidden md:flex items-center gap-8">
-        <a href="#features" class="nav-link text-sm">Features</a>
-        <a href="#how-it-works" class="nav-link text-sm">How it works</a>
-        <a href="/about" class="nav-link text-sm">About</a>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="/login" class="nav-link text-sm hidden md:block">Log in</a>
-        <a href="/register" class="btn-primary text-sm px-4 py-1.5 rounded-md">Get started</a>
-      </div>
+  <!-- FLOATING NAV (Effortel Style) -->
+  <nav class="floating-nav glass-panel hidden md:flex">
+    <div class="flex items-center gap-2 font-semibold tracking-tight text-white mr-6">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="20" height="20" rx="6" fill="#2ED2E5"/>
+        <path d="M5 10h10M5 7h6M5 13h8" stroke="#0F1317" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="tracking-tight text-lg">TaskFlow</span>
+    </div>
+    <div class="nav-links flex items-center gap-6 mr-6">
+      <a href="#features" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
+      <a href="#how-it-works" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Platform</a>
+      <a href="/about" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">About</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="/login" class="text-sm font-medium text-white hover:text-effortel-accent transition-colors">Log in</a>
+      <a href="/signup" class="btn-effortel btn-pill bg-effortel-accent text-effortel-dark-bg font-semibold text-sm px-6 py-2.5">Get Started</a>
     </div>
   </nav>
 
+  <!-- Mobile Nav (Top) -->
+  <nav class="md:hidden fixed top-0 left-0 right-0 z-50 glass-panel px-6 py-4 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-2 font-bold text-white">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#2ED2E5"/><path d="M5 10h10M5 7h6M5 13h8" stroke="#0F1317" stroke-width="1.5" stroke-linecap="round"/></svg>
+      TaskFlow
+    </a>
+    <a href="/signup" class="btn-effortel btn-pill bg-effortel-accent text-effortel-dark-bg font-semibold text-xs px-4 py-2">Get Started</a>
+  </nav>
+
   <!-- HERO -->
-  <section class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 overflow-hidden">
-    <div class="hero-glow animate-glow-pulse"></div>
-    <div class="relative z-10 max-w-3xl mx-auto">
-      <div class="badge mb-8 animate-fade-up">
-        <span class="badge-dot"></span>
-        Now with smart notes & task linking
+  <section class="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-32 overflow-hidden">
+    <!-- Glowing background accents -->
+    <div class="hero-glow-blob bg-effortel-accent w-[600px] h-[600px] rounded-full top-[-200px] left-1/2 -translate-x-1/2 opacity-20"></div>
+    <div class="hero-glow-blob bg-blue-600 w-[500px] h-[500px] rounded-full bottom-[-100px] right-[-100px] opacity-10"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+      <div class="mono-tag text-effortel-accent mb-6 animate-fade-up px-3 py-1 border border-effortel-accent/30 rounded-full bg-effortel-accent/10 backdrop-blur-sm flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-effortel-accent animate-pulse"></span>
+        [ V2.0 LIVE ]
       </div>
-      <h1 class="animate-fade-up anim-delay-1 text-5xl md:text-7xl font-bold tracking-tight leading-none mb-6" style="letter-spacing:-0.03em">
-        Tasks and notes,<br/>finally in sync.
+
+      <h1 class="animate-fade-up anim-delay-1 text-5xl md:text-8xl font-bold tracking-tighter leading-[1.1] mb-6 text-white drop-shadow-lg">
+        Drive Your <br/><span class="text-effortel-accent">Productivity</span>
       </h1>
-      <p class="animate-fade-up anim-delay-2 text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed">
-        A minimal workspace for developers and thinkers. Capture ideas, track work, and ship without friction.
+
+      <p class="animate-fade-up anim-delay-2 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+        A seamless workspace integrating tasks and notes for deep-work focused individuals. Say goodbye to friction.
       </p>
-      <div class="animate-fade-up anim-delay-3 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="/register" class="btn-primary px-6 py-2.5 rounded-md text-sm w-full sm:w-auto text-center">
-          Start for free
-        </a>
-        <a href="#features" class="btn-secondary px-6 py-2.5 rounded-md text-sm w-full sm:w-auto text-center">
-          See what's inside →
+
+      <div class="animate-fade-up anim-delay-3 flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
+        <a href="/signup" class="btn-effortel btn-pill bg-effortel-accent text-effortel-dark-bg font-semibold px-8 py-4 text-base w-full sm:w-auto text-center flex items-center justify-center gap-2">
+          Start building clarity <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
         </a>
       </div>
     </div>
 
-    <!-- Floating terminal preview -->
-    <div class="animate-fade-up anim-delay-4 relative z-10 mt-20 w-full max-w-2xl mx-auto">
-      <div class="border border-subtle rounded-xl overflow-hidden" style="background:#0a0a0a">
-        <div class="flex items-center gap-2 px-4 py-3 border-b border-subtle">
-          <div class="w-2.5 h-2.5 rounded-full bg-red-500 opacity-70"></div>
-          <div class="w-2.5 h-2.5 rounded-full bg-yellow-500 opacity-70"></div>
-          <div class="w-2.5 h-2.5 rounded-full bg-green-500 opacity-70"></div>
-          <span class="text-xs text-gray-600 ml-2">dashboard — TaskFlow</span>
-        </div>
-        <div class="p-5 text-left space-y-3">
-          <div class="flex items-center gap-3">
-            <div class="w-4 h-4 rounded border border-accent flex items-center justify-center flex-shrink-0">
-              <div class="w-2 h-2 bg-accent rounded-sm"></div>
+    <!-- Floating Dashboard Preview (Hero Image) -->
+    <div class="animate-fade-up anim-delay-4 relative z-10 mt-24 w-full max-w-4xl mx-auto anim-float">
+      <div class="glass-panel p-2 rounded-3xl border border-white/10 shadow-2xl">
+        <div class="bg-effortel-dark-surface rounded-2xl overflow-hidden border border-white/5">
+          <!-- Fake Window Header -->
+          <div class="flex items-center gap-2 px-5 py-4 border-b border-white/5 bg-black/20">
+            <div class="flex gap-2">
+              <div class="w-3 h-3 rounded-full bg-gray-700"></div>
+              <div class="w-3 h-3 rounded-full bg-gray-700"></div>
+              <div class="w-3 h-3 rounded-full bg-gray-700"></div>
             </div>
-            <span class="text-sm text-gray-300">Finish HTTP/1.1 server implementation</span>
-            <span class="ml-auto text-xs text-gray-600 border border-subtle px-2 py-0.5 rounded">Today</span>
+            <div class="mx-auto mono-tag text-gray-500 text-[10px]">taskflow.app/dashboard</div>
           </div>
-          <div class="flex items-center gap-3">
-            <div class="w-4 h-4 rounded border border-gray-700 flex-shrink-0"></div>
-            <span class="text-sm text-gray-300">Review GSoC proposal draft</span>
-            <span class="ml-auto text-xs bg-blue-900/40 text-blue-400 border border-blue-800/50 px-2 py-0.5 rounded">In progress</span>
+          <!-- Fake Content -->
+          <div class="p-8 text-left grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="col-span-2 space-y-4">
+              <div class="h-8 w-1/3 bg-white/10 rounded-md"></div>
+              <div class="space-y-3 pt-4">
+                <div class="h-16 bg-white/5 rounded-xl border border-white/5 flex items-center px-4 gap-4">
+                  <div class="w-5 h-5 rounded-full border border-effortel-accent bg-effortel-accent/20 flex items-center justify-center"><div class="w-2.5 h-2.5 bg-effortel-accent rounded-full"></div></div>
+                  <div class="h-4 w-1/2 bg-white/20 rounded"></div>
+                  <div class="ml-auto mono-tag text-[10px] text-effortel-accent bg-effortel-accent/10 px-2 py-1 rounded">TODAY</div>
+                </div>
+                <div class="h-16 bg-white/5 rounded-xl border border-white/5 flex items-center px-4 gap-4">
+                  <div class="w-5 h-5 rounded-full border border-white/20"></div>
+                  <div class="h-4 w-2/3 bg-white/20 rounded"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-span-1 border-l border-white/5 pl-6 space-y-4">
+              <div class="h-8 w-1/2 bg-white/10 rounded-md"></div>
+              <div class="h-32 bg-white/5 rounded-xl border border-white/5 p-4">
+                <div class="h-3 w-3/4 bg-white/10 rounded mb-2"></div>
+                <div class="h-3 w-1/2 bg-white/10 rounded mb-2"></div>
+                <div class="h-3 w-5/6 bg-white/10 rounded"></div>
+              </div>
+            </div>
           </div>
-          <div class="flex items-center gap-3">
-            <div class="w-4 h-4 rounded border border-gray-700 flex-shrink-0"></div>
-            <span class="text-sm text-gray-400 line-through">Set up GitHub Actions workflow</span>
-            <span class="ml-auto text-xs text-green-500">Done</span>
-          </div>
-          <hr class="divider my-2" />
-          <div class="text-xs text-gray-600">📝 3 notes linked · 2 tasks due this week</div>
         </div>
       </div>
-      <!-- glow under card -->
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-12 blur-3xl" style="background:rgba(0,112,243,0.2)"></div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section id="features" class="py-32 px-6 border-t border-subtle">
+  <!-- FEATURES (Bento Grid) -->
+  <section id="features" class="py-32 px-6 bg-[#0a0d10] relative">
     <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-20">
-        <p class="text-xs uppercase tracking-widest text-gray-500 mb-4">What you get</p>
-        <h2 class="text-3xl md:text-5xl font-bold tracking-tight" style="letter-spacing:-0.02em">Built for clarity</h2>
-        <p class="text-gray-400 mt-4 max-w-md mx-auto">No bloat. Every feature earns its place.</p>
+      <div class="text-center mb-24">
+        <div class="mono-tag text-effortel-accent mb-4 inline-block">[ CAPABILITIES ]</div>
+        <h2 class="text-4xl md:text-6xl font-bold tracking-tight mb-6">Designed for velocity.</h2>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">Everything you need to ship, structured in an intelligent bento layout.</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-900/50">
-        <!-- Feature 1 -->
-        <div class="card-hover border border-subtle rounded-none p-8 bg-black">
-          <span class="feature-num">01</span>
-          <div class="w-10 h-10 flex items-center justify-center border border-subtle rounded-lg mt-4 mb-5">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="2" rx="1" fill="#0070f3"/><rect x="2" y="8" width="10" height="2" rx="1" fill="white" opacity=".5"/><rect x="2" y="13" width="12" height="2" rx="1" fill="white" opacity=".5"/></svg>
+
+      <!-- Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Large Card (2 columns) -->
+        <div class="bento-card md:col-span-2 p-10 flex flex-col justify-between group relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-effortel-accent/10 rounded-full blur-3xl group-hover:bg-effortel-accent/20 transition-colors"></div>
+          <div class="relative z-10">
+            <div class="w-12 h-12 rounded-2xl bg-effortel-accent/10 border border-effortel-accent/20 flex items-center justify-center mb-8">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--effortel-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">Smart Note Linking</h3>
+            <p class="text-gray-400 text-lg leading-relaxed max-w-md">Write down meeting notes, draft code snippets, or brain-dump ideas. Link them directly to your tasks for seamless context switching.</p>
           </div>
-          <h3 class="font-semibold text-white mb-2">Task management</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">Create, prioritize, and track tasks with deadlines. Filter by status, tag, or date — all without leaving the keyboard.</p>
-        </div>
-        <!-- Feature 2 -->
-        <div class="card-hover border border-subtle rounded-none p-8 bg-black md:border-l-0">
-          <span class="feature-num">02</span>
-          <div class="w-10 h-10 flex items-center justify-center border border-subtle rounded-lg mt-4 mb-5">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="2" stroke="#0070f3" stroke-width="1.5"/><path d="M5 7h8M5 10h5" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></svg>
+          <!-- Decorative element -->
+          <div class="mt-12 h-40 border border-white/10 rounded-xl bg-black/40 p-4 relative z-10 flex gap-4 overflow-hidden mask-image-linear">
+             <div class="w-1/2 h-full bg-white/5 rounded-lg p-3"><div class="h-2 w-1/3 bg-white/20 rounded mb-2"></div><div class="h-2 w-full bg-white/10 rounded mb-2"></div></div>
+             <div class="w-1/2 h-full bg-effortel-accent/10 border border-effortel-accent/20 rounded-lg p-3"><div class="h-2 w-1/2 bg-effortel-accent rounded mb-2"></div><div class="h-2 w-full bg-white/20 rounded mb-2"></div></div>
           </div>
-          <h3 class="font-semibold text-white mb-2">Smart notes</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">Write and link notes to any task. Plain text, fast. No markdown editor bloat — just focused writing.</p>
         </div>
-        <!-- Feature 3 -->
-        <div class="card-hover border border-subtle rounded-none p-8 bg-black md:border-l-0">
-          <span class="feature-num">03</span>
-          <div class="w-10 h-10 flex items-center justify-center border border-subtle rounded-lg mt-4 mb-5">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#0070f3" stroke-width="1.5"/><path d="M9 5v4l3 2" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+
+        <!-- Square Card (1 column) -->
+        <div class="bento-card p-10 flex flex-col group">
+          <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
           </div>
-          <h3 class="font-semibold text-white mb-2">Auth & security</h3>
-          <p class="text-sm text-gray-400 leading-relaxed">JWT-secured sessions with refresh. Your data is yours. Private by default, no tracking, no ads.</p>
+          <h3 class="text-2xl font-bold mb-4">Blazing Fast</h3>
+          <p class="text-gray-400 leading-relaxed flex-1">Built with lightweight rendering. Navigate your tasks and notes instantly with zero loading spinners.</p>
+          <div class="mono-tag text-xs text-gray-500 mt-8">[ 0ms LATENCY ]</div>
         </div>
+
+        <!-- Square Card (1 column) -->
+        <div class="bento-card p-10 flex flex-col group bg-gradient-to-br from-effortel-dark-surface to-black border-white/5">
+          <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Deadline Tracking</h3>
+          <p class="text-gray-400 leading-relaxed">Assign due dates and priorities. TaskFlow automatically sorts your workload so you know exactly what to tackle next.</p>
+        </div>
+
+        <!-- Large Card (2 columns) -->
+        <div class="bento-card md:col-span-2 p-10 flex flex-col md:flex-row gap-10 items-center overflow-hidden">
+          <div class="flex-1">
+            <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4">Private & Secure by Default</h3>
+            <p class="text-gray-400 text-lg leading-relaxed mb-6">No social logins, no invasive tracking scripts, and no ads. Your data is encrypted and strictly yours.</p>
+            <a href="/signup" class="mono-tag text-effortel-accent hover:text-white transition-colors flex items-center gap-2">CREATE ACCOUNT <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+          </div>
+          <!-- Shield Visual -->
+          <div class="flex-1 relative w-full h-48 flex items-center justify-center">
+            <div class="absolute inset-0 bg-gradient-to-r from-effortel-accent/0 via-effortel-accent/10 to-effortel-accent/0 blur-xl rounded-full"></div>
+            <svg class="relative z-10 w-32 h-32 text-white/10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg class="w-12 h-12 text-effortel-accent anim-float" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section id="how-it-works" class="py-32 px-6">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center mb-20">
-        <p class="text-xs uppercase tracking-widest text-gray-500 mb-4">How it works</p>
-        <h2 class="text-3xl md:text-5xl font-bold tracking-tight" style="letter-spacing:-0.02em">Zero to focused in 30 seconds</h2>
-      </div>
-      <div class="space-y-0">
-        <div class="flex gap-8 py-10 border-t divider">
-          <div class="text-xs text-gray-600 font-mono pt-1 w-6 flex-shrink-0">01</div>
-          <div>
-            <h3 class="font-semibold text-white mb-2">Create your account</h3>
-            <p class="text-sm text-gray-400 leading-relaxed max-w-md">Sign up with an email. No OAuth, no social logins — just your credentials, hashed and secured. Takes 15 seconds.</p>
-          </div>
-        </div>
-        <div class="flex gap-8 py-10 border-t divider">
-          <div class="text-xs text-gray-600 font-mono pt-1 w-6 flex-shrink-0">02</div>
-          <div>
-            <h3 class="font-semibold text-white mb-2">Add your first task</h3>
-            <p class="text-sm text-gray-400 leading-relaxed max-w-md">Hit the + button or use the quick-add bar. Set a title, optional deadline, optional priority. Done in under 10 seconds.</p>
-          </div>
-        </div>
-        <div class="flex gap-8 py-10 border-t divider">
-          <div class="text-xs text-gray-600 font-mono pt-1 w-6 flex-shrink-0">03</div>
-          <div>
-            <h3 class="font-semibold text-white mb-2">Link notes to tasks</h3>
-            <p class="text-sm text-gray-400 leading-relaxed max-w-md">Every note can live standalone or be attached to a task. Write your context next to your work — never in a separate app.</p>
-          </div>
-        </div>
-        <div class="flex gap-8 py-10 border-t divider">
-          <div class="text-xs text-gray-600 font-mono pt-1 w-6 flex-shrink-0">04</div>
-          <div>
-            <h3 class="font-semibold text-white mb-2">Ship and repeat</h3>
-            <p class="text-sm text-gray-400 leading-relaxed max-w-md">Mark tasks done, archive notes, and stay clean. TaskFlow gets out of your way so you can focus on the actual work.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- CTA SECTION -->
+  <section class="py-32 px-6 relative border-t border-white/5 overflow-hidden">
+    <!-- Huge background glow for CTA -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl max-h-[400px] bg-effortel-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-  <!-- CTA -->
-  <section class="py-32 px-6 border-t border-subtle">
-    <div class="max-w-2xl mx-auto text-center">
-      <h2 class="text-3xl md:text-5xl font-bold tracking-tight mb-6" style="letter-spacing:-0.02em">Start building clarity.</h2>
-      <p class="text-gray-400 mb-10 leading-relaxed">It's free. It's minimal. It's yours.</p>
-      <a href="/register" class="btn-primary inline-block px-8 py-3 rounded-md text-sm">
-        Create your account →
-      </a>
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <h2 class="text-5xl md:text-7xl font-bold tracking-tighter mb-8 text-white">
+        Ready to <span class="text-transparent bg-clip-text bg-gradient-to-r from-effortel-accent to-blue-400">deploy</span> your focus?
+      </h2>
+      <p class="text-gray-400 text-lg mb-12 font-light">Join the waitlist or start for free today. Experience the minimalist power of TaskFlow.</p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/signup" class="btn-effortel btn-pill bg-white text-black font-semibold px-8 py-4 w-full sm:w-auto text-center">
+          Create Free Account
+        </a>
+        <a href="/login" class="btn-effortel btn-pill glass-panel text-white font-semibold px-8 py-4 w-full sm:w-auto text-center border border-white/10 hover:bg-white/10">
+          Log In
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="border-t border-subtle py-12 px-6">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-      <a href="/" class="flex items-center gap-2 font-semibold text-white text-sm">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="20" height="20" rx="4" fill="#0070f3"/>
-          <path d="M5 10h10M5 7h6M5 13h8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        TaskFlow
-      </a>
-      <div class="flex flex-wrap gap-6 text-sm text-gray-500">
-        <a href="/" class="hover:text-white transition-colors">Home</a>
-        <a href="/about" class="hover:text-white transition-colors">About</a>
-        <a href="/login" class="hover:text-white transition-colors">Log in</a>
-        <a href="/register" class="hover:text-white transition-colors">Sign up</a>
+  <footer class="border-t border-white/10 bg-[#0a0d10] pt-16 pb-32 md:pb-16 px-6">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+      <div class="space-y-4">
+        <a href="/" class="flex items-center gap-2 font-bold text-white text-lg tracking-tight">
+          <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#2ED2E5"/><path d="M5 10h10M5 7h6M5 13h8" stroke="#0F1317" stroke-width="2" stroke-linecap="round"/></svg>
+          TaskFlow
+        </a>
+        <p class="text-gray-500 text-sm max-w-xs">Building tools for deep work. Powered by minimal design and powerful functionality.</p>
       </div>
-      <p class="text-xs text-gray-700">© 2025 TaskFlow. Minimal by design.</p>
+
+      <div class="flex flex-wrap gap-x-12 gap-y-6">
+        <div class="flex flex-col gap-3">
+          <span class="mono-tag text-white/50">Platform</span>
+          <a href="/signup" class="text-sm text-gray-400 hover:text-white transition-colors">Sign up</a>
+          <a href="/login" class="text-sm text-gray-400 hover:text-white transition-colors">Log in</a>
+          <a href="#features" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+        </div>
+        <div class="flex flex-col gap-3">
+          <span class="mono-tag text-white/50">Company</span>
+          <a href="/about" class="text-sm text-gray-400 hover:text-white transition-colors">About</a>
+          <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
+          <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-gray-600 mono-tag">© 2026 TaskFlow. All rights reserved.</p>
+      <div class="flex items-center gap-4 text-gray-600">
+        <svg class="w-5 h-5 hover:text-white transition-colors cursor-pointer" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+        <svg class="w-5 h-5 hover:text-white transition-colors cursor-pointer" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+      </div>
     </div>
   </footer>
 
-  <script src="/static/js/main.js"></script>
 </body>
 </html>
