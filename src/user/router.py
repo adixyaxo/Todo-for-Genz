@@ -16,7 +16,9 @@ async def profile_url(request: Request):
     return templates.TemplateResponse(
         name="profile.html",
         request=request,
-        context={}
+        context={
+
+        }
     )
 
 

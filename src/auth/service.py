@@ -2,36 +2,56 @@ from src.auth.schemas import USER_LOGIN,USER_REGISTER
 from src.config.database import conn
 from src.config.settings import templates
 from fastapi import Request
+from pymongo.errors import DuplicateKeyError
+from src.auth.password import hash_password
+from fastapi.responses import RedirectResponse
+import bcrypt
 
+def handle_login(user: USER_LOGIN, request: Request):
+  db_call = conn.users.find_one({
+      "email": user.email
+  })
 
-def handle_login(user:USER_LOGIN,request:Request):
-  print(user)
-  existing = conn.users.find_one({"email":user.email,"password":user.password})
-  print(existing)
-  if not(existing):
-    return templates.TemplateResponse(
-      name="error.html",
-      request=request,
-      context={
-        "code":911,
-        "title":"Wrong Credentials",
-        "message":"Sorry man either the email or the password is wrong"
-
-      }
-    )
-  else:
-    return templates.TemplateResponse(
-      name="dashboard.html",
-      request=request,
-      context={}
-  )
+  try:
+    if not bcrypt.checkpw((user.password).encode('utf-8'),(str(db_call.get("password"))).encode('utf-8')):
+        return templates.TemplateResponse(
+            name="error.html",
+            request=request,
+            context={
+                "code": 911,
+                "title": "Wrong Credentials",
+                "message": "Sorry man either the email or the password is wrong"
+            }
+        )
+    else:
+        return templates.TemplateResponse(
+            name="dashboard.html",
+            request=request,
+            context={}
+        )
+  except Exception as e:
+        return templates.TemplateResponse(
+            name="error.html",
+            request=request,
+            context={
+              "code":"-1",
+              "title":"Login Me Dikkat",
+              "message":"Shyad Database me koi dikkat hai dekh kr batata hoon"
+            }
+        )
 
 
 def handle_signup(user:USER_REGISTER,request:Request):
-  print(user)
-  existing = conn.users.find_one({"email":user.email})
-  print(existing)
-  if existing:
+  data = {
+    "first_name":user.first_name,
+    "last_name":user.last_name,
+    "email":user.email,
+    "password": hash_password(user.password).decode("utf-8")
+  }
+
+  try:
+    conn.users.insert_one(data)
+  except DuplicateKeyError:
     return templates.TemplateResponse(
       name="error.html",
       request=request,
@@ -39,21 +59,7 @@ def handle_signup(user:USER_REGISTER,request:Request):
         "code":911,
         "title":"FAM! User already exits",
         "message":"Damn! man like Damn! there is already an account here with this email try with something else man"
-
       }
     )
-  else:
-      data = {
-        "first_name":user.first_name,
-        "last_name":user.last_name,
-        "email":user.email,
-        "password":user.password
-      }
-      conn.users.insert_one(data)
-      return templates.TemplateResponse(
-        name="message.html",
-        request=request,
-        context={"code":"001",
-                "title":"Sign Up Successfull",
-                "message":"The signup process for a major success"}
-    )
+  response = RedirectResponse(url="/dashbaord",status_code=201)
+  return response
