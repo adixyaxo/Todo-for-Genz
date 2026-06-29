@@ -3,4 +3,4 @@ pymongo
 pydantic
 pyjwt
 bcrypt
-dotenv
+python-dotenv
